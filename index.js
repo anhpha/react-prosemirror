@@ -1,21 +1,26 @@
-import React from 'react'
+import React, { Component } from 'react'
 import {ProseMirror} from 'prosemirror'
+import PropTypes from 'prop-types'
 
-export default React.createClass({
-	displayName: 'ProseMirror',
-	propTypes: {
-		options: React.PropTypes.object,
-		defaultValue: React.PropTypes.any,
-		value: React.PropTypes.any,
-		onChange: React.PropTypes.func,
-		valueLink: React.PropTypes.shape({
-			value: React.PropTypes.any,
-			requestChange: React.PropTypes.func,
+export default class extends Component{
+	constructor(props){
+		super(props);
+		this.displayName = 'ProseMirror';
+	}
+	 static propTypes = {
+		options: PropTypes.object,
+		defaultValue: PropTypes.any,
+		value: PropTypes.any,
+		onChange: PropTypes.func,
+		valueLink: PropTypes.shape({
+			value: PropTypes.any,
+			requestChange: PropTypes.func,
 		}),
-	},
+	}
 	render() {
+		// return <div ref={(el) => this.pm = el}>
 		return React.createElement('div', {ref: 'pm'})
-	},
+	}
 	componentWillUpdate(props) {
 		if ('value' in props || 'valueLink' in props) {
 			const value = props.value ||
@@ -27,7 +32,7 @@ export default React.createClass({
 				this._lastValue = value
 			}
 		}
-	},
+	}
 	componentWillMount() {
 		this._lastValue = this.props.value
 		if (this._lastValue === undefined && 'valueLink' in this.props) {
@@ -46,7 +51,7 @@ export default React.createClass({
 			options.docFormat = null
 		}
 		this.pm = new ProseMirror(options)
-	},
+	}
 	componentDidMount() {
 		this.refs.pm.appendChild(this.pm.wrapper)
 		this.pm.on('change', () => {
@@ -58,7 +63,7 @@ export default React.createClass({
 				callback(this._lastValue)
 			}
 		})
-	},
+	}
 	componentDidUpdate({options: previous}) {
 		const current = this.props.options
 		Object.keys(current).forEach(k => {
@@ -71,9 +76,9 @@ export default React.createClass({
 				}
 			}
 		})
-	},
+	}
 	getContent(type = this.props.options.docFormat) {
 		return this.pm.getContent(type)
-	},
-})
+	}
+}
 
